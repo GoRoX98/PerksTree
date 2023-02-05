@@ -10,7 +10,7 @@ public class Player
     public int CurrentPoints => _currentPoints;
     public List<Skill> PlayerSkills => _playerSkills;
 
-    public event Action<int> ChangedPoints;
+    public static event Action<int> EventChangedPoints;
 
     public Player(List<Skill> reserchedSkills)
     {
@@ -21,5 +21,12 @@ public class Player
     public void Earn(int amount)
     {
         _currentPoints += amount;
+        EventChangedPoints?.Invoke(_currentPoints);
+    }
+
+    public void Spend(int amount)
+    {
+        _currentPoints -= amount;
+        EventChangedPoints?.Invoke(_currentPoints);
     }
 }

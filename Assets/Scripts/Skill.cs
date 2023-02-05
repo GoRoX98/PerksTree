@@ -6,23 +6,34 @@ using UnityEngine;
 public class Skill : ScriptableObject
 {
     [SerializeField] private string _name;
-    [SerializeField] private bool _BaseSkill;
+    [SerializeField] private bool _baseSkill;
     [SerializeField] private int _cost;
     [SerializeField] private bool _avaible;
     [SerializeField] private bool _reserched;
     [SerializeField] private List<Skill> _parents;
 
-    public event Action<Skill> Reserched;
+    public bool Reserched => _reserched;
+    public bool BaseSkill => _baseSkill;
+    public bool Avaible => _avaible;
+    public int Cost => _cost;
+    public string Name => _name;
+
+    #region Events
+
+    public event Action<Skill> ReserchedEvent;
 
     private void OnEnable()
     {
-        Reserched += ReserchedAction;
+        if (_baseSkill)
+            _reserched = true;
+        ReserchedEvent += ReserchedAction;
+        GameContoller.EventRestart += OnRestart;
     }
     private void OnDisable()
     {
-        Reserched -= ReserchedAction;
+        ReserchedEvent -= ReserchedAction;
+        GameContoller.EventRestart -= OnRestart;
     }
-
     private void ReserchedAction(Skill obj)
     {
         if(!_avaible && !_reserched)
@@ -37,6 +48,12 @@ public class Skill : ScriptableObject
         }
     }
 
+    #endregion
+
+    private void Awake()
+    {
+        _avaible = _parents.Find(match => match.BaseSkill) && !_reserched;
+    }
 
     public void Reserch()
     {
@@ -45,6 +62,12 @@ public class Skill : ScriptableObject
 
         _avaible = false;
         _reserched = true;
-        Reserched?.Invoke(this);
+        ReserchedEvent?.Invoke(this);
+    }
+
+    public void OnRestart()
+    {
+        _reserched = false;
+        _avaible = _parents.Find(match => match.BaseSkill) && !_reserched;
     }
 }
