@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
+[RequireComponent(typeof(Image))]
 public class SkillView : MonoBehaviour
 {
     private StatusSV _status;
@@ -75,7 +75,11 @@ public class SkillView : MonoBehaviour
 
     private void Init()
     {
-        _status = _skill.BaseSkill ? StatusSV.Reserched : _skill.Avaible && !_skill.Reserched ? StatusSV.Avaible : _skill.Reserched ? StatusSV.Reserched : StatusSV.NotAvaible;
+        _status = _skill.BaseSkill ? 
+            StatusSV.Reserched : _skill.Avaible && !_skill.Reserched ? 
+            StatusSV.Avaible : _skill.Reserched ? 
+            StatusSV.Reserched : StatusSV.NotAvaible;
+
         ChangeColor();
     }
 
