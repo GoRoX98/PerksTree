@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Craft
   _baseSkill: 0
   _cost: 5
-  _avaible: 0
+  _avaible: 1
   _reserched: 0
   _parents:
   - {fileID: 11400000, guid: 56e7087af540ae64ebf605ae71b193ab, type: 2}

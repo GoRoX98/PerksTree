@@ -17,10 +17,11 @@ public class Skill : ScriptableObject
     public bool Avaible => _avaible;
     public int Cost => _cost;
     public string Name => _name;
+    public List<Skill> Parents => _parents;
 
     #region Events
 
-    public event Action<Skill> ReserchedEvent;
+    public static event Action<Skill> ReserchedEvent;
 
     private void OnEnable()
     {
@@ -36,13 +37,16 @@ public class Skill : ScriptableObject
     }
     private void ReserchedAction(Skill obj)
     {
-        if(!_avaible && !_reserched)
+        if(!_reserched)
         {
             foreach(Skill sk in _parents)
             {
                 if(sk == obj)
                 {
-                    _avaible = true;
+                    if (sk.Reserched)
+                        _avaible = true;
+                    else
+                        _avaible = false;
                 }
             }
         }
@@ -52,7 +56,7 @@ public class Skill : ScriptableObject
 
     private void Awake()
     {
-        _avaible = _parents.Find(match => match.BaseSkill) && !_reserched;
+        _avaible = _parents.Find(match => match.BaseSkill == true) && !_reserched;
     }
 
     public void Reserch()
@@ -62,6 +66,16 @@ public class Skill : ScriptableObject
 
         _avaible = false;
         _reserched = true;
+        ReserchedEvent?.Invoke(this);
+    }
+
+    public void Forget()
+    {
+        if (!_reserched)
+            return;
+
+        _avaible = true;
+        _reserched = false;
         ReserchedEvent?.Invoke(this);
     }
 

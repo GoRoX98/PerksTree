@@ -6,8 +6,10 @@ using UnityEngine;
 public class GameContoller : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _balanceUI;
+    [SerializeField] private SkillTree _tree;
     private Player _player;
-    private SkillTree _tree;
+
+    public int Balance => _player.CurrentPoints;
 
     #region Events
 
@@ -20,7 +22,7 @@ public class GameContoller : MonoBehaviour
 
     public void OnRestart()
     {
-        int points = 0;
+        int points = _player.CurrentPoints - _player.StartPoints;
         foreach(var rs in _player.PlayerSkills)
             points += rs.Cost;
 
@@ -60,10 +62,11 @@ public class GameContoller : MonoBehaviour
             if (sv.Skill.Reserched)
                 reserchedSkills.Add(sv.Skill);
         }
-        _tree = new SkillTree(skillList, skillsView);
+        _tree.SetTree(skillList, skillsView);
         _player = new Player(reserchedSkills);
     }
 
     public void Earn() => _player.Earn(Amount.CurrentEarn);
-
+    public void EarnForget(Skill sk = null) => _player.Earn(0, sk);
+    public void Spend(Skill sk) => _player.Spend(sk);
 }

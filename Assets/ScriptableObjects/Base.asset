@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Base
   m_EditorClassIdentifier: 
   _name: Base
+  _baseSkill: 1
   _cost: 0
   _avaible: 0
-  _reserched: 1
+  _reserched: 0
   _parents: []

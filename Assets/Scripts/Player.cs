@@ -7,6 +7,7 @@ public class Player
     private int _currentPoints;
     private List<Skill> _playerSkills;
 
+    public int StartPoints => _startPoints;
     public int CurrentPoints => _currentPoints;
     public List<Skill> PlayerSkills => _playerSkills;
 
@@ -16,17 +17,25 @@ public class Player
     {
         _currentPoints = _startPoints;
         _playerSkills = reserchedSkills;
-    }
-
-    public void Earn(int amount)
-    {
-        _currentPoints += amount;
         EventChangedPoints?.Invoke(_currentPoints);
     }
 
-    public void Spend(int amount)
+    public void Earn(int amount, Skill sk = null)
     {
-        _currentPoints -= amount;
+        if (sk != null)
+        {
+            _playerSkills.Remove(sk);
+            _currentPoints += sk.Cost;
+        }
+        else
+            _currentPoints += amount;
+        EventChangedPoints?.Invoke(_currentPoints);
+    }
+
+    public void Spend(Skill sk)
+    {
+        _currentPoints -= sk.Cost;
+        _playerSkills.Add(sk);
         EventChangedPoints?.Invoke(_currentPoints);
     }
 }
